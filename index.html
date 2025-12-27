@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crown Screens - Industrial Multi-Device Command Center</title>
+  <meta name="description" content="Professional multi-device synchronization and management software. Support hundreds of devices with real-time sync, automation scripts, and ultra-low latency.">
+  <link rel="icon" type="image/png" href="icon1.png">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Crown Screens - Professional Multi-Device Management">
+  <meta property="og:description" content="Industrial multi-device management center, supporting large-scale device synchronization and automated control.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1200">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0EAFFB",
+            secondary: "#FC4236",
+            background: "#0B1121",
+            surface: "#151E32",
+            "surface-hover": "#1e293b",
+          },
+          fontFamily: {
+            sans: ["Outfit", "sans-serif"],
+          },
+          boxShadow: {
+            'neon-blue': '0 0 20px rgba(14, 175, 251, 0.3)',
+            'neon-red': '0 0 20px rgba(252, 66, 54, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .text-gradient {
+      background: linear-gradient(to right, #0EAFFB, #FC4236);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .bg-gradient-primary {
+      background: linear-gradient(to right, #0EAFFB, #FC4236);
+    }
+    /* Scrollbar styles */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B1121;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0EAFFB;
+    }
+  </style>
+
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body class="bg-background text-slate-200 font-sans antialiased overflow-x-hidden">
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
+</body>
+</html>
