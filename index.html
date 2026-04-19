@@ -127,15 +127,24 @@
           <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
             Built for professional developers and QA teams. Control, sync, and automate hundreds of devices from a single interface to skyrocket your productivity.
           </p>
-          <div class="flex flex-wrap justify-center lg:justify-start gap-4 mb-12">
-            <a href="https://doc.some3c.com/panda-manual/download"target="_blank"><button class="bg-gradient-primary hover:scale-105 active:scale-95 text-white font-bold py-4 px-10 rounded-xl shadow-neon-blue transition-all flex items-center gap-2 group">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-y-0.5 transition-transform"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-              START FREE TRIAL
-            </button></a>
-            <a href="https://youtu.be/L8h_i-ut1RM"target="_blank"><button class="border border-slate-600 hover:bg-slate-800 text-white font-bold py-4 px-10 rounded-xl transition-all flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              WATCH DEMO
-            </button></a>
+       <div class="flex flex-wrap justify-center lg:justify-start gap-4 mb-12">
+            <a href="#Download">
+              <button class="bg-gradient-primary hover:scale-105 active:scale-95 text-white font-bold py-4 px-10 rounded-xl shadow-neon-blue transition-all flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-y-0.5 transition-transform">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+                </svg>
+                START FREE TRIAL
+              </button>
+            </a>
+            
+            <a href="https://youtu.be/L8h_i-ut1RM" target="_blank">
+              <button class="border border-slate-600 hover:bg-slate-800 text-white font-bold py-4 px-10 rounded-xl transition-all flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                WATCH DEMO
+              </button>
+            </a>
           </div>
           <div class="flex flex-wrap justify-center lg:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all text-sm">
             <div class="flex items-center gap-2">
@@ -145,6 +154,10 @@
   <line x1="12" x2="12" y1="17" y2="21"></line>
 </svg>
               Windows 10/11
+            </div>
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+              MacOS 10.15+
             </div>
             <div class="flex items-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -396,6 +409,90 @@
       </div>
     </div>
   </section>
+<section id="interface-preview" class="py-24 bg-slate-900/10">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Multi-Platform Support</h2>
+        <p class="text-slate-400">Select your system type, download, and install to use for free.</p>
+      </div>
+
+      <div class="flex justify-center mb-12">
+        <div class="bg-surface p-1.5 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-center shadow-2xl gap-1">
+          <button 
+            onclick="switchTab('desktop')" 
+            id="btn-desktop"
+            class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 bg-gradient-primary text-white shadow-neon-blue"
+          >
+            Panda
+          </button>
+          <button 
+            onclick="switchTab('PandaClassic')" 
+            id="btn-PandaClassic"
+            class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 text-slate-400 hover:text-white"
+          >
+            Panda Classic
+          </button>
+          <button 
+            onclick="switchTab('PandaMac')" 
+            id="btn-PandaMac"
+            class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 text-slate-400 hover:text-white"
+          >
+            Panda For MAC
+          </button>
+        </div>
+      </div>
+
+      <div class="relative mx-auto border border-slate-700 rounded-2xl overflow-hidden bg-slate-950 shadow-2xl transition-all duration-500 hover:border-primary/30" style="max-width: 100%;">
+        <img 
+          id="img-desktop" 
+          src="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/pandas.jpg" 
+          alt="Panda Android Screen Projection" 
+          class="w-full h-auto block"
+          style="width: 2160px; max-width: 100%;"
+        >
+        <img 
+          id="img-PandaClassic" 
+          src="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/PandaClassic.jpg" 
+          alt="Panda Classic Android Screen Projection" 
+          class="w-full h-auto hidden"
+          style="width: 2160px; max-width: 100%;"
+        >
+        <img 
+          id="img-PandaMac" 
+          src="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/PandaClassic.jpg" 
+          alt="Panda Mac OS Android Screen Projection" 
+          class="w-full h-auto hidden"
+          style="width: 2160px; max-width: 100%;"
+        >
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function switchTab(activeType) {
+      // 定义所有类型
+      const types = ['desktop', 'PandaClassic', 'PandaMac'];
+      
+      types.forEach(type => {
+        const btn = document.getElementById(`btn-${type}`);
+        const img = document.getElementById(`img-${type}`);
+        
+        if (type === activeType) {
+          // 激活状态
+          btn.classList.add('bg-gradient-primary', 'text-white', 'shadow-neon-blue');
+          btn.classList.remove('text-slate-400');
+          img.classList.remove('hidden');
+          img.classList.add('block');
+        } else {
+          // 非激活状态
+          btn.classList.remove('bg-gradient-primary', 'text-white', 'shadow-neon-blue');
+          btn.classList.add('text-slate-400');
+          img.classList.add('hidden');
+          img.classList.remove('block');
+        }
+      });
+    }
+  </script>
 
   <!-- FAQ Section -->
   <section id="faq" class="py-24">
@@ -455,7 +552,7 @@
   </section>
 
   <!-- Final CTA Section -->
-  <section class="py-24 relative overflow-hidden">
+  <section id="Download" class="py-24 relative overflow-hidden">
     <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
       <div class="bg-gradient-to-r from-primary to-secondary p-[1px] rounded-[2rem]">
         <div class="bg-background rounded-[2rem] py-16 px-8">
@@ -463,13 +560,33 @@
           <p class="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">
             Join 10,000+ professionals worldwide. Download now and start your full feature trial.
           </p>
-          <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="https://doc.some3c.com/panda-manual/download"target="_blank"><button class="bg-white text-background font-black py-4 px-12 rounded-xl hover:bg-primary hover:text-white transition-all shadow-xl">
-              Start Free Trial Now
-            </button></a>
-            <a href="https://doc.some3c.com/panda-manual/contact-us"target="_blank"><button class="border border-slate-700 text-white font-bold py-4 px-12 rounded-xl hover:bg-slate-800 transition-all">
-              Contact Sales
-            </button></a>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            <div class="block px-6 py-5 border border-slate-700 rounded-xl bg-slate-900">
+              <div class="text-left mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                  <span class="text-sm text-slate-400">Windows</span>
+                </div>
+                <div class="text-lg font-bold text-white">Windows 10/11 Supported</div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <a href="https://1443965649-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2Fnr7mODcx4OmqI75xOUOV%2Fuploads%2F26n6nTxJtOeZL7YsDeuV%2Fpanda_v8.357.0.zip?alt=media&token=b30037f5-7a48-4f54-8547-94d85bf360c3" target="_blank" class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white">Panda</a>
+                <a href="https://github.com/Duckkkking/Panda/releases/download/untagged-82b4225f4012e61b26b5/PandaClassic-4.0.1.2.exe" target="_blank" class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white">Panda Classic</a>
+              </div>
+            </div>
+            <div class="block px-6 py-5 border border-slate-700 rounded-xl bg-slate-900">
+              <div class="text-left mb-3">
+                <div class="flex items-center gap-2 mb-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M2 17h20"/></svg>
+                  <span class="text-sm text-slate-400">MacOS</span>
+                </div>
+                <div class="text-lg font-bold text-white">MacOS Supported</div>
+              </div>
+              <div class="flex flex-col gap-2">
+                <a href="https://doc.some3c.com/panda-manual/download?arch=universal" target="_blank" class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white">Coming Soon</a>
+                <a href="https://doc.some3c.com/panda-manual/download?arch=universal" target="_blank" class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white">Coming Soon</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
