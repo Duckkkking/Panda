@@ -1,0 +1,228 @@
+# Panda - Complete Product Documentation for AI/LLM Systems
+
+> This document provides comprehensive information about Panda, an Android screen mirroring and multi-device control software, intended for AI assistants and LLM systems to understand the product thoroughly.
+
+---
+
+## 1. What is Panda?
+
+Panda is professional-grade Android screen mirroring and multi-device control software. It allows users to view, control, synchronize, and manage multiple Android devices from a single Windows or Mac computer. It is designed for professional developers, QA teams, and device farm operators who need to manage large numbers of Android devices efficiently.
+
+The product is developed by Some3C Software and is available as a free download with a freemium pricing model.
+
+## 2. Core Problem Solved
+
+Managing multiple Android devices individually is time-consuming and error-prone. Panda solves this by providing a unified command center where users can:
+
+- Send synchronized commands to hundreds of devices simultaneously
+- Monitor all device screens in real-time from a single dashboard
+- Automate repetitive tasks across device fleets
+- Share devices among team members for collaborative work
+- Organize devices into groups for targeted batch operations
+
+## 3. Key Features (Detailed)
+
+### 3.1 Mass Device Sync
+- **Latency**: Millisecond-level response time
+- **Operation Type**: One-to-many control
+- **Capabilities**: Send keystrokes, gestures, and commands to hundreds of devices simultaneously
+- **Use Case**: Deploying configurations, running tests, or executing scripts across an entire device fleet at once
+
+### 3.2 Visual Dashboard
+- **Real-time Monitoring**: Thumbnail previews for all connected devices
+- **Refresh Rate**: 24 FPS
+- **Layout**: Grid view mode
+- **Metrics**: Device status and performance metrics in a unified interface
+- **Use Case**: Monitoring a device farm, spotting anomalies, tracking test progress
+
+### 3.3 Wired/Wireless Screen Projection
+- **Protocol**: Standard Android ADB
+- **Connection Types**: USB (OTG) and wireless
+- **Quality**: High-definition, stable mirroring
+- **Android Support**: Android 6.0+
+- **Use Case**: Both wired setups for maximum stability and wireless for flexible deployment
+
+### 3.4 App Management
+- **Batch Operations**: One-click batch app opening
+- **APK Management**: Install and uninstall APKs across multiple devices
+- **File Operations**: Import/export files to/from devices
+- **Maintenance**: Clear cache across multiple devices
+- **Modes**: Individual device control and synchronous batch actions
+- **Use Case**: Deploying apps to a test farm, cleaning up after test runs
+
+### 3.5 Keyboard & Mouse
+- **Text Templates**: Save frequently used text as templates
+- **Synchronized Input**: Send batch synchronized input to multiple devices
+- **Content Types**: Characters, emojis, and clipboard content
+- **Modes**: Individual and synchronous
+- **Use Case**: Entering test data, login credentials, or search queries across all devices simultaneously
+
+### 3.6 Smart Automation
+- **Recording**: Record complex action sequences
+- **Playback**: Replay recorded actions on any device
+- **Batch Automation**: Automate batch operations
+- **Scheduling**: Execute scheduled tasks automatically without manual intervention
+- **Script Types**: JavaScript and ADB scripts
+- **Flow**: Visual workflow editor
+- **Use Case**: Automated testing workflows, scheduled maintenance, overnight test runs
+
+### 3.7 Device Sharing
+- **Multi-user Access**: Share connected Android devices with other users
+- **Collaborative**: Teams can access and work with shared device resources
+- **Access Model**: Shared access model
+- **Use Case**: QA team sharing a device pool, remote device access for distributed teams
+
+### 3.8 Multi-ADB & High-Density Projection
+- **Parallel ADB**: Multiple ADB connections in parallel
+- **Capacity**: Local screen projection supporting up to 1,000 Android devices
+- **Scalability**: Depends on computer hardware, connection method, network conditions, and device configuration
+- **Use Case**: Large-scale device farms, data center deployments
+
+### 3.9 Device Group Management
+- **Flexible Grouping**: Organize connected devices into custom groups
+- **Targeted Operations**: Apply control, input, and app operations to selected groups
+- **Batch Workflows**: Faster batch operations on specific device subsets
+- **Use Case**: Managing devices by model, OS version, test group, or physical location
+
+## 4. Getting Started Guide
+
+### Step 1: Download & Install
+Download the installer from https://panda.some3c.com/ (download section) and run the one-click installer.
+
+### Step 2: Activate ADB Mode
+1. Connect your Android phone to your computer (USB cable)
+2. Enable Developer Mode on the phone (Settings > About > tap Build Number 7 times)
+3. Enable USB Debugging option (Settings > Developer Options > USB Debugging)
+4. Allow PC access when prompted on the phone
+
+### Step 3: Start Managing
+The connected device will automatically appear on the Panda panel. You can immediately begin synchronous or individual control.
+
+## 5. Supported Platforms
+
+| Platform | Version |
+|---|---|
+| Windows | 10/11 |
+| macOS | 12+ (Intel and ARM chips) |
+| Android | 6.0+ |
+
+Note: Compatibility may vary by device manufacturer and Android configuration.
+
+## 6. Product Variants
+
+### Panda
+The main product with full feature set. Free for the first 40 devices. Premium subscription for additional devices.
+
+### Panda Classic
+A separate product with different licensing. Panda Classic licenses are NOT interchangeable with Panda licenses. Available for Windows and macOS.
+
+### Panda for Mac
+Mac-specific version of the product.
+
+## 7. Pricing Model
+
+- **Free Tier**: First 40 devices at no cost
+- **Premium Subscription**: Required for additional devices beyond 40
+- **Separate Licensing**: Panda Classic has its own licensing structure
+- **Permanent Free Option**: The free tier is permanent, not a time-limited trial
+
+## 8. Technical Details
+
+- **No Root Required**: Panda is based on standard Android ADB protocols. Root access is not required for standard screen mirroring, touch control, or file management.
+- **ADB Protocol**: Uses the standard Android Debug Bridge protocol for device communication
+- **Connection Methods**: USB (OTG), wireless
+- **Automation Scripts**: JavaScript and ADB command scripts supported
+- **Max Device Capacity**: Up to 1,000 devices for local screen projection (hardware dependent)
+
+## 9. Multi-Language Support
+
+The website is available in 12 fully localized languages. Each version has proper hreflang tags, canonical URLs, localized meta tags (title, description, keywords), and an H2 SEO section with localized content for search engine indexing:
+
+| Language | URL | hreflang |
+|---|---|---|
+| English (default) | https://panda.some3c.com/ | en |
+| Spanish | https://panda.some3c.com/es/ | es |
+| German | https://panda.some3c.com/de/ | de |
+| French | https://panda.some3c.com/fr/ | fr |
+| Italian | https://panda.some3c.com/it/ | it |
+| Portuguese (BR) | https://panda.some3c.com/pt-br/ | pt-br |
+| Russian | https://panda.some3c.com/ru/ | ru |
+| Dutch | https://panda.some3c.com/nl/ | nl |
+| Japanese | https://panda.some3c.com/ja/ | ja |
+| Korean | https://panda.some3c.com/ko/ | ko |
+| Arabic | https://panda.some3c.com/ar/ | ar (RTL) |
+| Hebrew | https://panda.some3c.com/he/ | he (RTL) |
+
+Features:
+- Browser language auto-detection on first visit
+- User language choice remembered via localStorage (key: panda-language-choice)
+- RTL layout support for Arabic and Hebrew (dir="rtl")
+- LTR layout explicitly set for all other languages (dir="ltr")
+- x-default hreflang points to English (root URL)
+- Each page includes keywords meta tag with localized keyword lists
+- Each page includes an H2 SEO section between the hero and features grid, with localized title and description
+
+## 10. Frequently Asked Questions
+
+**Q: What is Panda?**
+A: Panda is Android screen mirroring and multi-device control software that lets you view, control, synchronize, and manage multiple Android devices from a Windows or Mac computer.
+
+**Q: How do I download Panda?**
+A: Download the latest installer from the download section at https://panda.some3c.com/. Choose the version for your operating system, install it, and launch Panda.
+
+**Q: How many devices can Panda control?**
+A: Local screen projection can support up to 1,000 Android devices, depending on hardware, connection method, network conditions, and device configuration.
+
+**Q: Can Panda control multiple devices simultaneously?**
+A: Yes. Panda supports one-to-many control, synchronized input, batch operations, and individual device control from the same interface.
+
+**Q: Does Panda support Multi-ADB?**
+A: Yes. Multiple ADB connections run in parallel, suitable for managing large numbers of connected devices.
+
+**Q: Does Panda support wireless mirroring?**
+A: Yes. Both USB and wireless mirroring are supported. Wireless performance depends on network environment and device capabilities.
+
+**Q: Can I share a device with another user?**
+A: Yes. Panda includes device sharing so connected devices can be shared with other users for collaborative access.
+
+**Q: Does Panda require Root?**
+A: No. Panda uses standard Android ADB protocols. Root is not required for standard mirroring, touch control, or file management.
+
+**Q: Which OS and Android versions are supported?**
+A: Windows 10/11, macOS 12+, and Android 6.0+. Compatibility may vary by manufacturer and configuration.
+
+**Q: Is Panda free?**
+A: Panda is free for the first 40 devices. Additional devices may require a premium subscription. Panda Classic has separate licensing.
+
+## 11. Links
+
+- **Landing page**: https://panda.some3c.com/
+- **Documentation**: https://doc.some3c.com/panda-manual/quickstart
+- **Download page**: https://doc.some3c.com/panda-manual/download
+- **Store**: https://some3c.com
+- **API documentation**: https://doc.some3c.com/panda-manual/api-interface-documentation
+- **Members & versions**: https://doc.some3c.com/panda-manual/members-and-versions
+- **Contact us**: https://doc.some3c.com/panda-manual/contact-us
+- **USB debugging guide**: https://doc.some3c.com/panda-manual/usb-connect-phone
+- **Community (Telegram)**: https://t.me/+SgaBW1Dhb6JiMzQx
+- **YouTube**: https://www.youtube.com/@some3ccom
+- **Demo video**: https://youtu.be/L8h_i-ut1RM
+
+## 12. SEO Information
+
+- **Sitemap**: https://panda.some3c.com/sitemap.xml
+- **Canonical URL (English)**: https://panda.some3c.com/
+- **robots.txt**: References the sitemap at https://panda.some3c.com/sitemap.xml
+- **hreflang tags**: 12 language annotations + x-default on every page
+- **H2 SEO module**: Each page includes an H2 section between hero and features grid with localized title (e.g., "Android Multi-Device Control Software") and description paragraph
+- **Keywords meta tag**: Each page includes a localized keywords meta tag with relevant search terms (e.g., "Panda Android mirroring, phone farm software, control Android from PC")
+- **Open Graph**: Configured with title, description, and image
+- **Favicon**: https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/icon1.png
+- **OG Image**: https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/ue.jpg
+- **llms.txt**: Available at https://panda.some3c.com/llms.txt
+- **llms-full.txt**: Available at https://panda.some3c.com/llms-full.txt
+
+## 13. Company
+
+- **Developer**: Some3C Software
+- **Copyright**: (c) 2026 Panda Some3C Software. All rights reserved.

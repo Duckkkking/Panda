@@ -1,0 +1,69 @@
+# Panda - Android Screen Mirroring & Multi-Device Control
+
+> Panda is professional-grade Android screen mirroring and multi-device control software. It enables managing, synchronizing, and automating hundreds of Android devices from a single Windows or Mac interface. Designed for developers, QA teams, and device farm operators.
+
+## Product Overview
+
+Panda provides a unified command center for large-scale Android device management. Key capabilities include mass device synchronization with millisecond latency, real-time visual dashboard monitoring, wired/wireless screen projection via ADB protocol, batch app management, synchronized keyboard/mouse input, smart automation with script recording, multi-user device sharing, multi-ADB parallel connections supporting up to 1,000 devices, and flexible device group management.
+
+## Supported Platforms
+
+- Windows 10/11
+- macOS 12+
+- Android 6.0+
+
+## Key Features
+
+1. Mass Device Sync - Millisecond latency, one-to-many control
+2. Visual Dashboard - Real-time thumbnail previews, 24 FPS refresh
+3. Wired/Wireless Screen Projection - USB & wireless via ADB protocol
+4. App Management - Batch install/uninstall, file transfer, cache clearing
+5. Keyboard & Mouse - Synchronized text templates, emoji & clipboard support
+6. Smart Automation - Record/replay actions, scheduled tasks, JS/ADB scripts
+7. Device Sharing - Multi-user collaborative device access
+8. Multi-ADB & High-Density Projection - Up to 1,000 devices locally
+9. Device Group Management - Flexible grouping for batch operations
+
+## Pricing
+
+- Free for the first 40 devices
+- Premium subscription for additional devices
+- Panda Classic has separate licensing (not interchangeable with Panda)
+
+## Languages
+
+The site is available in 12 languages with full localization:
+- English (default): https://panda.some3c.com/
+- Español: https://panda.some3c.com/es/
+- Deutsch: https://panda.some3c.com/de/
+- Français: https://panda.some3c.com/fr/
+- Italiano: https://panda.some3c.com/it/
+- Português (BR): https://panda.some3c.com/pt-br/
+- Русский: https://panda.some3c.com/ru/
+- Nederlands: https://panda.some3c.com/nl/
+- 日本語: https://panda.some3c.com/ja/
+- 한국어: https://panda.some3c.com/ko/
+- العربية: https://panda.some3c.com/ar/
+- עברית: https://panda.some3c.com/he/
+
+## Important Notes
+
+- No root access required - based on standard Android ADB protocols
+- Browser language auto-detection with user choice memory (localStorage)
+- All language versions have correct hreflang tags and canonical URLs
+- RTL layout support for Arabic and Hebrew
+- Each page includes an H2 SEO section with localized keywords for search engine indexing
+
+## Links
+
+- Landing page: https://panda.some3c.com/
+- Documentation: https://doc.some3c.com/panda-manual/quickstart
+- Download: https://doc.some3c.com/panda-manual/download
+- Store: https://some3c.com
+- API docs: https://doc.some3c.com/panda-manual/api-interface-documentation
+- Community (Telegram): https://t.me/+SgaBW1Dhb6JiMzQx
+- YouTube: https://www.youtube.com/@some3ccom
+
+## Full documentation
+
+See [llms-full.txt](https://panda.some3c.com/llms-full.txt) for the complete product documentation.
