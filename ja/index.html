@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panda - Androidスクリーンミラーリング & マルチデバイス制御</title>
+<meta name="description" content="Pandaは、WindowsまたはMacから複数のAndroidデバイスを管理、同期、自動化するためのAndroidスクリーンミラーリングおよびマルチデバイス制御ソフトウェアです。">
+<!-- Open Graph / Social Media -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Panda - プロフェッショナル マルチデバイス管理">
+<meta property="og:description" content="次世代マルチデバイス管理センター。大規模なAndroid携帯の同期と自動制御をサポート。">
+<meta property="og:image" content="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/ue.jpg">
+<link rel="icon" href="https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/icon1.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0EAFFB",
+            secondary: "#FC4236",
+            background: "#0B1121",
+            surface: "#151E32",
+            "surface-hover": "#1e293b",
+          },
+          fontFamily: {
+            sans: ["Outfit", "sans-serif"],
+          },
+          boxShadow: {
+            'neon-blue': '0 0 20px rgba(14, 175, 251, 0.3)',
+            'neon-red': '0 0 20px rgba(252, 66, 54, 0.3)',
+          }
+        }
+      }
+    }
+</script>
+<style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .text-gradient {
+      background: linear-gradient(to right, #0EAFFB, #FC4236);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .bg-gradient-primary {
+      background: linear-gradient(to right, #0EAFFB, #FC4236);
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B1121;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #0EAFFB;
+    }
+    /* Language dropdown */
+    .lang-dropdown {
+      position: relative;
+    }
+    .lang-dropdown-menu {
+      display: none;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .lang-dropdown.open .lang-dropdown-menu {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .lang-dropdown-menu a:hover {
+      background: rgba(14, 175, 251, 0.1);
+    }
+    /* RTL support for Arabic and Hebrew */
+    [dir="rtl"] {
+      text-align: right;
+    }
+  </style>
+<!-- Canonical & hreflang tags -->
+<link rel="canonical" href="https://panda.some3c.com/ja/">
+<link rel="alternate" hreflang="en" href="https://panda.some3c.com/en/">
+<link rel="alternate" hreflang="es" href="https://panda.some3c.com/es/">
+<link rel="alternate" hreflang="de" href="https://panda.some3c.com/de/">
+<link rel="alternate" hreflang="fr" href="https://panda.some3c.com/fr/">
+<link rel="alternate" hreflang="it" href="https://panda.some3c.com/it/">
+<link rel="alternate" hreflang="pt-br" href="https://panda.some3c.com/pt-br/">
+<link rel="alternate" hreflang="ru" href="https://panda.some3c.com/ru/">
+<link rel="alternate" hreflang="nl" href="https://panda.some3c.com/nl/">
+<link rel="alternate" hreflang="ja" href="https://panda.some3c.com/ja/">
+<link rel="alternate" hreflang="ko" href="https://panda.some3c.com/ko/">
+<link rel="alternate" hreflang="ar" href="https://panda.some3c.com/ar/">
+<link rel="alternate" hreflang="he" href="https://panda.some3c.com/he/">
+<link rel="alternate" hreflang="x-default" href="https://panda.some3c.com/en/">
+<script>
+(function () {
+  const path = window.location.pathname;
+  const here = new RegExp('^/ja(?:/|$)', 'i').test(path);
+  if (here) {
+    localStorage.setItem('panda-language-choice', 'ja');
+    return;
+  }
+  const hasChoice = localStorage.getItem('panda-language-choice');
+  if (!hasChoice) {
+    const lang = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    const langMap = {
+      'es': '/es/', 'de': '/de/', 'fr': '/fr/', 'it': '/it/',
+      'pt': '/pt-br/', 'pt-br': '/pt-br/', 'ru': '/ru/',
+      'nl': '/nl/', 'ja': '/ja/', 'ko': '/ko/',
+      'ar': '/ar/', 'he': '/he/', 'en': '/en/'
+    };
+    const lc = lang.toLowerCase().split(/[-_]/)[0];
+    const fc = lang.toLowerCase().replace('_', '-');
+    const target = langMap[fc] || langMap[lc];
+    if (target) {
+      localStorage.setItem('panda-language-choice', lc);
+      window.location.replace(target);
+    }
+  }
+})();
+</script>
+</head>
+<body class="bg-background text-slate-200 font-sans antialiased overflow-x-hidden">
+<!-- Navigation -->
+<nav class="fixed w-full z-50 top-0 border-b border-slate-800 bg-background/80 backdrop-blur-md">
+<div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center space-x-2">
+<div class="shadow-neon-blue rounded-lg overflow-hidden flex items-center justify-center w-8 h-8 bg-primary/20">
+<img alt="Logo" class="w-6 h-6 object-contain" src="https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/icon1.png"/>
+</div>
+<span class="text-xl font-bold text-white tracking-wide">Panda - Android Screen Projection</span>
+</div>
+<div class="hidden md:flex space-x-8 font-medium">
+<a class="text-primary transition-colors hover:text-white" href="#">ホーム</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#features">機能</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#guide">ガイド</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#faq">よくある質問</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/quickstart" target="_blank">ドキュメント</a>
+</div>
+<div class="flex items-center space-x-3">
+<a href="https://some3c.com" target="_blank"><button class="hidden sm:flex items-center gap-2 px-4 py-2 border border-slate-700 hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors">
+<svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          Store
+        </button></a>
+<a href="https://doc.some3c.com/panda-manual/download" target="_blank"><button class="flex items-center gap-2 px-4 py-2 bg-gradient-primary hover:opacity-90 rounded-lg text-sm font-medium text-white shadow-neon-blue transition-opacity">
+<svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+          Download
+        </button></a>
+<!-- Language Dropdown -->
+<div class="lang-dropdown relative ml-1" data-language-switcher>
+  <button class="flex items-center gap-1.5 px-3 py-2 border border-slate-700 hover:bg-slate-800 rounded-lg text-sm font-medium transition-colors" onclick="document.querySelector('.lang-dropdown').classList.toggle('open')">
+    <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M2 12h20"></path>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+    </svg>
+    <span class="text-slate-300">JA</span>
+    <svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="14" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"></polyline></svg>
+  </button>
+  <div class="lang-dropdown-menu absolute right-0 mt-2 w-48 bg-surface border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-50">
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/en/" onclick="localStorage.setItem('panda-language-choice','en')">
+      <span>English</span>
+      <span class="ml-auto text-xs text-slate-500">EN</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/es/" onclick="localStorage.setItem('panda-language-choice','es')">
+      <span>Español</span>
+      <span class="ml-auto text-xs text-slate-500">ES</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/de/" onclick="localStorage.setItem('panda-language-choice','de')">
+      <span>Deutsch</span>
+      <span class="ml-auto text-xs text-slate-500">DE</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/fr/" onclick="localStorage.setItem('panda-language-choice','fr')">
+      <span>Français</span>
+      <span class="ml-auto text-xs text-slate-500">FR</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/it/" onclick="localStorage.setItem('panda-language-choice','it')">
+      <span>Italiano</span>
+      <span class="ml-auto text-xs text-slate-500">IT</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/pt-br/" onclick="localStorage.setItem('panda-language-choice','pt-br')">
+      <span>Português (BR)</span>
+      <span class="ml-auto text-xs text-slate-500">PT-BR</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/ru/" onclick="localStorage.setItem('panda-language-choice','ru')">
+      <span>Русский</span>
+      <span class="ml-auto text-xs text-slate-500">RU</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/nl/" onclick="localStorage.setItem('panda-language-choice','nl')">
+      <span>Nederlands</span>
+      <span class="ml-auto text-xs text-slate-500">NL</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-white bg-primary/10" href="/ja/" onclick="localStorage.setItem('panda-language-choice','ja')">
+      <span>日本語</span>
+      <span class="ml-auto text-xs text-slate-500">JA</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/ko/" onclick="localStorage.setItem('panda-language-choice','ko')">
+      <span>한국어</span>
+      <span class="ml-auto text-xs text-slate-500">KO</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/ar/" onclick="localStorage.setItem('panda-language-choice','ar')" dir="rtl">
+      <span>العربية</span>
+      <span class="ml-auto text-xs text-slate-500">AR</span>
+    </a>
+    <a class="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800" href="/he/" onclick="localStorage.setItem('panda-language-choice','he')" dir="rtl">
+      <span>עברית</span>
+      <span class="ml-auto text-xs text-slate-500">HE</span>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+<div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-6 relative z-10 text-center lg:text-left">
+<div class="lg:flex items-center gap-12">
+<div class="lg:w-1/2">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-bold tracking-widest uppercase mb-6">
+<div class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 flex items-center justify-center">
+<img class="w-full h-full object-contain" src="https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/icon1.png"/>
+</span></div>
+            バージョン 9.3.43 リリース済み
+          </div>
+<h1 class="text-4xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+            次世代 <br/>
+<span class="text-gradient">マルチデバイス</span><br/>
+            コマンドセンター
+          </h1>
+<p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            プロの開発者とQAチームのために構築。単一のインターフェースから何百ものデバイスを制御、同期、自動化して生産性を飛躍的に向上。
+          </p>
+<div class="flex flex-wrap justify-center lg:justify-start gap-4 mb-12">
+<a href="#Download">
+<button class="bg-gradient-primary hover:scale-105 active:scale-95 text-white font-bold py-4 px-10 rounded-xl shadow-neon-blue transition-all flex items-center gap-2 group">
+<svg class="group-hover:translate-y-0.5 transition-transform" fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+                無料体験を開始
+              </button>
+</a>
+<a href="https://youtu.be/L8h_i-ut1RM" target="_blank">
+<button class="border border-slate-600 hover:bg-slate-800 text-white font-bold py-4 px-10 rounded-xl transition-all flex items-center gap-2">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<polygon points="5 3 19 12 5 21 5 3"></polygon>
+</svg>
+                デモを見る
+              </button>
+</a>
+</div>
+<div class="flex flex-wrap justify-center lg:justify-start gap-6 opacity-60 grayscale hover:grayscale-0 transition-all text-sm">
+<div class="flex items-center gap-2">
+<svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<rect height="14" rx="2" width="20" x="2" y="3"></rect>
+<line x1="8" x2="16" y1="21" y2="21"></line>
+<line x1="12" x2="12" y1="17" y2="21"></line>
+</svg>
+              Windows 10/11
+            </div>
+<div class="flex items-center gap-2">
+<svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><rect height="14" rx="2" width="20" x="2" y="3"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path></svg>
+              macOS 12+
+            </div>
+<div class="flex items-center gap-2">
+<svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<rect height="20" rx="2" ry="2" width="14" x="5" y="2"></rect>
+<path d="M12 18h.01"></path>
+</svg>
+              Android 6.0+
+            </div>
+</div>
+</div>
+<div class="lg:w-1/2 mt-16 lg:mt-0 relative">
+<div class="relative z-10 bg-slate-900 border border-slate-700 p-2 rounded-2xl shadow-2xl transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
+<img alt="Dashboard Preview" class="rounded-xl w-full h-auto grayscale-[0.2]" src="https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/ue.jpg">
+<div class="absolute -bottom-6 -right-6 bg-surface border border-slate-700 p-4 rounded-xl shadow-xl hidden md:block">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+<span class="text-xs font-bold text-slate-300">サーバーステータス: オンライン</span>
+</div>
+<div class="text-xl font-bold text-white">永久無料</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Grid -->
+<section class="py-24 bg-slate-900/30" id="features">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-5xl font-bold text-white mb-4">コア競争優位性</h2>
+<p class="text-slate-400 max-w-2xl mx-auto">大規模展開、即座のレスポンス、究極の安定性のために設計。</p>
+</div>
+<div class="grid items-stretch md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Feature 1 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-primary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">マスデバイス同期</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">数百のデバイスに同時にキーストローク、ジェスチャー、コマンドを送信するミリ秒レベルのレイテンシ。真の「一対多」操作を実現。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">応答</div>
+<div class="text-xs font-semibold text-primary">リアルタイム</div>
+</div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">制御</div>
+<div class="text-xs font-semibold text-primary">一対多</div>
+</div>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-secondary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="8" rx="1" width="8" x="3" y="3"></rect>
+<rect height="8" rx="1" width="8" x="13" y="3"></rect>
+<rect height="8" rx="1" width="8" x="3" y="13"></rect>
+<rect height="8" rx="1" width="8" x="13" y="13"></rect>
+</svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">ビジュアルダッシュボード</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">接続されている全デバイスのリアルタイムサムネイルプレビュー。単一の統合インターフェースからデバイスステータスとパフォーマンス指標を監視。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">更新</div>
+<div class="text-xs font-semibold text-primary">24 FPS</div>
+</div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">モード</div>
+<div class="text-xs font-semibold text-primary">グリッド</div>
+</div>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-primary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect>
+<line x1="8" x2="16" y1="21" y2="21"></line>
+<line x1="12" x2="12" y1="17" y2="21"></line>
+</svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">有線/無線スクリーン投影</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">標準ADBプロトコルに基づき、安定した高解像度のUSBおよび無線スクリーンミラーリングをサポート。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">接続</div>
+<div class="text-xs font-semibold text-primary">OTG/USB</div>
+</div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">サポート</div>
+<div class="text-xs font-semibold text-primary">Android 6+</div>
+</div>
+</div>
+</div>
+<!-- Feature 4 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-secondary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="7" rx="1" width="7" x="3" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="14"></rect><rect height="7" rx="1" width="7" x="3" y="14"></rect></svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">アプリ管理</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">アプリの一括起動、APKのインストール/アンインストール、ファイルのインポート/エクスポート、複数デバイスのキャッシュクリアをサポート。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">モード</div>
+<div class="text-xs font-semibold text-primary">個別</div>
+</div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">アクション</div>
+<div class="text-xs font-semibold text-primary">同期</div>
+</div>
+</div>
+</div>
+<!-- Feature 5 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-primary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="12" rx="2" width="20" x="2" y="6"></rect>
+<path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h.01M14 14h.01M18 14h.01"></path>
+</svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">キーボード & マウス</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">よく使うテキストをテンプレートとして保存し、文字、絵文字、クリップボードの内容を含む同期一括入力を送信。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">モード</div>
+<div class="text-xs font-semibold text-primary">個別</div>
+</div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">アクション</div>
+<div class="text-xs font-semibold text-primary">同期</div>
+</div>
+</div>
+</div>
+<!-- Feature 6 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-secondary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<path d="m10 10-2 2 2 2"></path>
+<path d="m14 14 2-2-2-2"></path>
+</svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">スマート自動化</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">複雑なアクションタスクの記録と再生、バッチ操作の自動化、手動介入なしでスケジュールされたタスクの自動実行。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">スクリプト</div>
+<div class="text-xs font-semibold text-primary">JS/ADB</div>
+</div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg">
+<div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">フロー</div>
+<div class="text-xs font-semibold text-primary">ビジュアル</div>
+</div>
+</div>
+</div>
+<!-- Feature 7 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-secondary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">デバイス共有</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">接続されたAndroidデバイスを他のユーザーと共有し、チームが共有デバイスリソースにアクセスしてコラボレーションしやすくします。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg"><div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">アクセス</div><div class="text-xs font-semibold text-primary">共有</div></div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg"><div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">ユーザー</div><div class="text-xs font-semibold text-primary">マルチユーザー</div></div>
+</div>
+</div>
+<!-- Feature 8 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-primary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="7" rx="1" width="7" x="3" y="4"></rect><rect height="7" rx="1" width="7" x="14" y="4"></rect><rect height="7" rx="1" width="7" x="3" y="13"></rect><rect height="7" rx="1" width="7" x="14" y="13"></rect></svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">Multi-ADB & 高密度投影</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">複数のADB接続を並行してサポートし、ローカルスクリーン投影で最大1,000台のAndroidデバイスを処理可能。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg"><div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">ADB</div><div class="text-xs font-semibold text-primary">Multi-ADB</div></div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg"><div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">投影</div><div class="text-xs font-semibold text-primary">最大1,000</div></div>
+</div>
+</div>
+<!-- Feature 9 -->
+<div class="bg-surface p-8 rounded-2xl border border-slate-800 hover:border-primary/50 transition-all group hover:-translate-y-1 duration-300 flex flex-col h-full min-h-[360px]">
+<div class="bg-slate-800 w-12 h-12 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+<svg class="text-secondary" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="6" rx="1" width="7" x="3" y="4"></rect><rect height="6" rx="1" width="7" x="14" y="4"></rect><rect height="6" rx="1" width="7" x="3" y="14"></rect><rect height="6" rx="1" width="7" x="14" y="14"></rect><path d="M10 7h4"></path><path d="M10 17h4"></path></svg>
+</div>
+<h3 class="text-xl font-bold text-white mb-3 group-hover:text-primary transition-colors">デバイスグループ管理</h3>
+<p class="text-slate-400 mb-6 text-sm leading-relaxed flex-grow min-h-[96px]">接続されたデバイスをグループに整理し、選択したデバイスに制御、入力、アプリ操作を適用してより高速なバッチワークフローを実現。</p>
+<div class="flex gap-4 mt-auto">
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg"><div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">グループ</div><div class="text-xs font-semibold text-primary">柔軟</div></div>
+<div class="bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg"><div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">アクション</div><div class="text-xs font-semibold text-primary">バッチ</div></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Guide / Steps -->
+<section class="py-24 border-y border-slate-800" id="guide">
+<div class="max-w-7xl mx-auto px-6">
+<div class="lg:flex items-center gap-16">
+<div class="lg:w-1/2 mb-12 lg:mb-0">
+<h2 class="text-3xl md:text-5xl font-bold text-white mb-8">3分で <span class="text-primary">始めよう</span></h2>
+<div class="space-y-8">
+<div class="flex gap-6 group">
+<div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all duration-300">01</div>
+<div>
+<h4 class="text-xl font-bold text-white mb-2">ダウンロード & インストール</h4>
+<p class="text-slate-400 leading-relaxed">当社のウェブサイトからインストーラーをダウンロードし、ワンクリックインストーラーを実行します。</p>
+</div>
+</div>
+<div class="flex gap-6 group">
+<div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all duration-300">02</div>
+<div>
+<h4 class="text-xl font-bold text-white mb-2">ADBモードを有効化</h4>
+<p class="text-slate-400 leading-relaxed">電話をコンピューターに接続 - 開発者モードを有効化 - USBデバッグオプションを有効化 - PCアクセスを許可。</p>
+</div>
+</div>
+<div class="flex gap-6 group">
+<div class="flex-shrink-0 w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center text-primary font-bold group-hover:bg-primary group-hover:text-white transition-all duration-300">03</div>
+<div>
+<h4 class="text-xl font-bold text-white mb-2">管理開始</h4>
+<p class="text-slate-400 leading-relaxed">デバイスは自動的にPandaパネルに表示されます。すぐに同期または個別制御を開始できます。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:w-1/2">
+<div class="bg-gradient-to-br from-primary/20 to-secondary/20 p-8 rounded-3xl border border-white/5">
+<div class="aspect-video bg-slate-950 rounded-xl overflow-hidden flex items-center justify-center relative group cursor-pointer">
+<img alt="Tutorial" class="opacity-40 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/usb-debugging.jpg">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-20 h-20 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+<a href="https://doc.some3c.com/panda-manual/usb-connect-phone#id-2..how-to-turn-on-usb-debugging-mode" target="_blank"><svg class="text-white ml-1" fill="currentColor" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></a>
+</div>
+</div>
+</div>
+<p class="mt-6 text-center text-sm text-slate-400 italic font-medium">"モバイルアプリテストで使った中で最も直感的なマルチデバイスマネージャー。" — Tech Review Weekly</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-slate-900/10" id="interface-preview">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-5xl font-bold text-white mb-4">マルチプラットフォームサポート</h2>
+<p class="text-slate-400">システムタイプを選択し、ダウンロードしてインストールすれば無料で使用できます。</p>
+</div>
+<div class="flex justify-center mb-12">
+<div class="bg-surface p-1.5 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-center shadow-2xl gap-1">
+<button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 bg-gradient-primary text-white shadow-neon-blue" id="btn-desktop" onclick="switchTab('desktop')">
+            Panda
+          </button>
+<button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 text-slate-400 hover:text-white" id="btn-PandaClassic" onclick="switchTab('PandaClassic')">
+            Panda Classic
+          </button>
+<button class="tab-btn px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 text-slate-400 hover:text-white" id="btn-PandaMac" onclick="switchTab('PandaMac')">
+            Panda for Mac
+          </button>
+</div>
+</div>
+<div class="relative mx-auto border border-slate-700 rounded-2xl overflow-hidden bg-slate-950 shadow-2xl transition-all duration-500 hover:border-primary/30" style="max-width: 100%;">
+<img alt="Panda Android Screen Projection" class="w-full h-auto block" id="img-desktop" src="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/pandas.jpg" style="width: 2160px; max-width: 100%;"/>
+<img alt="Panda Classic Android Screen Projection" class="w-full h-auto hidden" id="img-PandaClassic" src="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/PandaClassic.jpg" style="width: 2160px; max-width: 100%;"/>
+<img alt="Panda Mac OS Android Screen Projection" class="w-full h-auto hidden" id="img-PandaMac" src="https://raw.githubusercontent.com/Duckkkking/Panda/refs/heads/main/PandaClassic.jpg" style="width: 2160px; max-width: 100%;"/>
+</div>
+</div>
+</section>
+<script>
+    function switchTab(activeType) {
+      const types = ['desktop', 'PandaClassic', 'PandaMac'];
+      types.forEach(type => {
+        const btn = document.getElementById(`btn-${type}`);
+        const img = document.getElementById(`img-${type}`);
+        if (type === activeType) {
+          btn.classList.add('bg-gradient-primary', 'text-white', 'shadow-neon-blue');
+          btn.classList.remove('text-slate-400');
+          img.classList.remove('hidden');
+          img.classList.add('block');
+        } else {
+          btn.classList.remove('bg-gradient-primary', 'text-white', 'shadow-neon-blue');
+          btn.classList.add('text-slate-400');
+          img.classList.add('hidden');
+          img.classList.remove('block');
+        }
+      });
+    }
+  </script>
+<!-- FAQ Section -->
+<section class="py-24" id="faq">
+<div class="max-w-4xl mx-auto px-6">
+<div class="text-center mb-16">
+<svg class="mx-auto text-primary mb-4" fill="none" height="40" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+<h2 class="text-3xl md:text-5xl font-bold text-white mb-4">よくある質問</h2>
+<p class="text-slate-400">Pandaについて知っておくべきことすべて。</p>
+</div>
+<div class="bg-surface rounded-3xl border border-slate-800 p-8 md:p-12 shadow-2xl">
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="0">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors text-primary">PandaのAndroidスクリーンミラーリングとは何ですか？</span>
+<svg class="faq-minus text-primary flex-shrink-0" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 hidden group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-96 pb-6">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">PandaはAndroidスクリーンミラーリングおよびマルチデバイス制御ソフトウェアで、WindowsまたはMacコンピューターから複数のAndroidデバイスを表示、制御、同期、管理できます。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="1">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">Panda Mirroringをダウンロードするには？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">このウェブサイトのダウンロードセクションから最新のPandaインストーラーをダウンロードします。OSに合ったバージョンを選択し、インストールしてPandaを起動し、Androidデバイスの接続を開始します。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="2">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">Pandaは何台のAndroidデバイスを制御できますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">Pandaは高密度マルチデバイスワークフローをサポートします。ローカルスクリーン投影は、コンピューターのハードウェア、接続方法、ネットワーク条件、デバイス設定に応じて最大1,000台のAndroidデバイスをサポートできます。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="3">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">Pandaは複数のAndroidデバイスを同時に制御できますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">はい。Pandaは一対多制御、同期入力、バッチ操作、および同じインターフェースからの個別デバイス制御をサポートします。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="4">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">PandaはMulti-ADBをサポートしていますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">はい。Pandaは複数のADB接続を並行してサポートし、多数の接続されたAndroidデバイスの管理に適しています。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="5">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">Pandaは無線Androidスクリーンミラーリングをサポートしていますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">はい。PandaはUSBおよび無線の両方のAndroidスクリーンミラーリングをサポートします。無線のパフォーマンスはネットワーク環境とデバイスの機能に依存します。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="6">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">Androidデバイスを他のユーザーと共有できますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">はい。Pandaにはデバイス共有機能があり、接続されたAndroidデバイスを他のユーザーと共有でき、チームのコラボレーティブデバイスアクセスが容易になります。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="7">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">PandaはRootアクセスを必要としますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">いいえ。Pandaは標準のAndroid ADBプロトコルに基づいています。標準のスクリーンミラーリング、タッチ制御、またはファイル管理にRootアクセスは必要ありません。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="8">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">PandaはどのOSとAndroidバージョンをサポートしていますか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">PandaはWindows 10/11、macOS 12以降、Android 6.0以降をサポートします。互換性はデバイスメーカーとAndroid設定により異なる場合があります。</p>
+</div>
+</div>
+<div class="faq-item border-b border-slate-800 last:border-0">
+<button class="faq-button w-full py-6 flex items-center justify-between text-left group transition-colors" data-faq="9">
+<span class="faq-question text-lg font-semibold pr-8 transition-colors">Pandaは無料ですか？</span>
+<svg class="faq-minus text-primary flex-shrink-0 hidden" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path></svg>
+<svg class="faq-plus text-slate-500 flex-shrink-0 group-hover:text-primary transition-colors" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out max-h-0">
+<p class="text-slate-400 leading-relaxed text-sm md:text-base">Pandaは最初の40デバイスに無料利用オプションを提供します。追加デバイスにはプレミアムサブスクリプションが必要な場合があります。Panda Classicは別個のライセンスがあり、Pandaのライセンスと互換性はありません。</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-24 relative overflow-hidden" id="Download">
+<div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+<div class="bg-gradient-to-r from-primary to-secondary p-[1px] rounded-[2rem]">
+<div class="bg-background rounded-[2rem] py-16 px-8">
+<h2 class="text-4xl md:text-6xl font-black text-white mb-6">効率を向上させる準備はできましたか？</h2>
+<p class="text-slate-400 text-lg mb-10 max-w-2xl mx-auto">
+            世界中の10,000人以上のプロフェッショナルに参加。今すぐダウンロードして全機能の試用を開始。
+          </p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+<div class="block px-6 py-5 border border-slate-700 rounded-xl bg-slate-900">
+<div class="text-left mb-3">
+<div class="flex items-center gap-2 mb-2">
+<svg class="text-primary" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="14" rx="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg>
+<span class="text-sm text-slate-400">Windows</span>
+</div>
+<div class="text-lg font-bold text-white">Windows 10/11 対応</div>
+</div>
+<div class="flex flex-col gap-2">
+<a class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white" href="https://doc.some3c.com/panda-manual/download#id-1.panda-for-windows" target="_blank">Panda</a>
+<a class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white" href="https://doc.some3c.com/panda-manual/download#id-2.panda-classic-for-windows" target="_blank">Panda Classic</a>
+</div>
+</div>
+<div class="block px-6 py-5 border border-slate-700 rounded-xl bg-slate-900">
+<div class="text-left mb-3">
+<div class="flex items-center gap-2 mb-2">
+<svg class="text-primary" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="14" rx="2" width="20" x="2" y="3"></rect><path d="M2 17h20"></path></svg>
+<span class="text-sm text-slate-400">macOS</span>
+</div>
+<div class="text-lg font-bold text-white">macOS 対応</div>
+</div>
+<div class="flex flex-col gap-2">
+<a class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white" href="https://doc.some3c.com/panda-manual/download#id-3.panda-classic-for-mac-os" target="_blank">ARMチップ向け</a>
+<a class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold rounded-lg bg-gradient-primary hover:opacity-90 transition-all text-white" href="https://doc.some3c.com/panda-manual/download#id-3.panda-classic-for-mac-os" target="_blank">Intelチップ向け</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-slate-950 pt-20 pb-10 border-t border-slate-900">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-2 md:col-span-2">
+<div class="flex items-center space-x-2 mb-6">
+<div class="w-8 h-8 rounded-lg shadow-neon-blue flex items-center justify-center bg-primary/20">
+<img class="w-full h-full object-contain" src="https://raw.githubusercontent.com/Duckkkking/panda/refs/heads/main/icon1.png"/>
+</div>
+<span class="text-2xl font-bold text-white tracking-wide">Panda - Android Screen Projection</span>
+</div>
+<p class="text-slate-400 max-w-sm mb-8">
+            Android向けプロフェッショナルグレードのマルチデバイス管理ソフトウェア。世界中の大規模モバイル操作のために設計。
+          </p>
+<div class="flex gap-4 mt-auto">
+<a class="p-2 bg-slate-900 rounded-lg hover:text-primary transition-colors border border-slate-800" href="https://t.me/+SgaBW1Dhb6JiMzQx" target="_blank"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><line x1="22" x2="11" y1="2" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></a>
+<a class="p-2 bg-slate-900 rounded-lg hover:text-primary transition-colors border border-slate-800" href="https://some3c.com/" target="_blank"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" x2="21" y1="6" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path>
+</svg></a>
+<a class="p-2 bg-slate-900 rounded-lg hover:text-primary transition-colors border border-slate-800" href="https://www.youtube.com/@some3ccom" target="_blank"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path>
+<polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+</svg></a>
+</div>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">製品</h4>
+<ul class="space-y-4 text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/download" target="_blank">ダウンロード</a></li>
+<li><a class="hover:text-primary transition-colors" href="#features">機能</a></li>
+<li><a class="hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/members-and-versions" target="_blank">登録</a></li>
+<li><a class="hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/quickstart" target="_blank">ドキュメント</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">サポート</h4>
+<ul class="space-y-4 text-slate-500">
+<li><a class="hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/quickstart" target="_blank">ドキュメント</a></li>
+<li><a class="hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/contact-us" target="_blank">ヘルプセンター</a></li>
+<li><a class="hover:text-primary transition-colors" href="https://t.me/+SgaBW1Dhb6JiMzQx" target="_blank">コミュニティ</a></li>
+<li><a class="hover:text-primary transition-colors" href="https://doc.some3c.com/panda-manual/api-interface-documentation" target="_blank">API</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-10 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="text-slate-600 text-sm">
+          © 2026 Panda Some3C Software. 全著作権所有。
+        </div>
+</div>
+</div>
+</footer>
+<!-- Language dropdown click-outside handler -->
+<script>
+document.addEventListener('click', function(e) {
+  const dropdown = document.querySelector('.lang-dropdown');
+  if (dropdown && !dropdown.contains(e.target)) {
+    dropdown.classList.remove('open');
+  }
+});
+</script>
+<!-- FAQ JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let openFaq = 0;
+      const faqButtons = document.querySelectorAll('.faq-button');
+      faqButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const faqIndex = parseInt(this.getAttribute('data-faq'));
+          const answer = this.nextElementSibling;
+          const question = this.querySelector('.faq-question');
+          const minusIcon = this.querySelector('.faq-minus');
+          const plusIcon = this.querySelector('.faq-plus');
+          if (openFaq === faqIndex) {
+            answer.style.maxHeight = '0';
+            answer.classList.remove('pb-6');
+            question.classList.remove('text-primary');
+            question.classList.add('text-slate-200');
+            minusIcon.classList.add('hidden');
+            plusIcon.classList.remove('hidden');
+            openFaq = null;
+          } else {
+            faqButtons.forEach(btn => {
+              const idx = parseInt(btn.getAttribute('data-faq'));
+              if (idx === openFaq) {
+                const otherAnswer = btn.nextElementSibling;
+                const otherQuestion = btn.querySelector('.faq-question');
+                const otherMinus = btn.querySelector('.faq-minus');
+                const otherPlus = btn.querySelector('.faq-plus');
+                otherAnswer.style.maxHeight = '0';
+                otherAnswer.classList.remove('pb-6');
+                otherQuestion.classList.remove('text-primary');
+                otherQuestion.classList.add('text-slate-200');
+                otherMinus.classList.add('hidden');
+                otherPlus.classList.remove('hidden');
+              }
+            });
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            answer.classList.add('pb-6');
+            question.classList.remove('text-slate-200');
+            question.classList.add('text-primary');
+            minusIcon.classList.remove('hidden');
+            plusIcon.classList.add('hidden');
+            openFaq = faqIndex;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
